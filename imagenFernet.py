@@ -64,8 +64,8 @@ if params.modo == "encriptar":
     print(encrypt_message(params.mensaje, generate_key(path_image)))
     msg1 = "este es el mensaje cifrado"
     msg2 = encrypt_message(params.mensaje, generate_key(path_image))
-    metadatos_imag.meter_metadatos(msg1, msg2) #Arreglar errores
-    image_modi = "imagen_bonita.jpg"
+    metadatos_imag.meter_metadatos(msg1, msg2, path_image) #Arreglar errores
+    image_modi = path_image
     metadatos_imag.imprimir_metasmodi(image_modi)
 
 if params.modo == "desencriptar":
