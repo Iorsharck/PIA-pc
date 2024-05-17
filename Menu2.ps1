@@ -1,4 +1,4 @@
-﻿# Personalizo el saludo según el horario
+# Personalizo el saludo según el horario
 function ObtenerSaludo {
     $horaActual = Get-Date
     $hora = $horaActual.Hour
@@ -19,25 +19,16 @@ function MostrarMenu {
 ||      Menú:      ||
 =====================
 (1) Argparse (con también el help)
-(2) Socket
-(3) API
-(4) Módulo extra no nativo
-(5) Módulo instalado por PIP
-(6) 3 de las tareas generen reportes como output
-(7) 2 deben tener función main
+(2) Escaneo de puertos
+(3) Imagen API
+(4) Imagen Fernet
+(5) Metadatos de la Imagen
+(6) Trasmisión
+(7) Webscrapping
 (8) 3 tareas se conecten
 (9) Salir
 =====================
 "@
-}
-
-# Función para ejecutar el script de Python
-function EjecutarScript {
-    param (
-        [string]$rutaScript
-    )
-
-    Invoke-Item $rutaScript
 }
 
 # Función para ejecutar el script de Python con argparse
@@ -50,11 +41,8 @@ function EjecutarScriptConArgparse {
     & python $rutaScript @argsPython
 }
 
-# Ejemplo de como usarlo
-# EjecutarScript -rutaScript "C:\Usuario\Documentos\Script.py"
-
-# Lo pongo a esperar 5 segundos
-function EsperarCincoSegundos {
+# Lo pongo a esperar 2 segundos
+function EsperarDosSegundos {
     Start-Sleep -Seconds 2
 }
 
@@ -67,8 +55,8 @@ function MostrarMensajeDeHorario {
 # Mostrar el mensaje de acuerdo al horario
 MostrarMensajeDeHorario
 
-# Esperar 5 segundos
-EsperarCincoSegundos
+# Esperar 2 segundos
+EsperarDosSegundos
 
 # Mostrar el menú
 MostrarMenu
@@ -76,16 +64,43 @@ MostrarMenu
 # Preguntar al pinponero que va a hacer
 $opcion = Read-Host "Seleccione una opción del menú (1-9)"
 
+# Arrays/Lista con los nombres de los programas
+$rutaCodigos = @("ScriptConArgparse","escaneopuertos.py","imagenAPI.py","imagenFernet.py","metadatos_imag.py","trasmision.py","webscrappy.py")
+
 # Ejecutar el script correspondiente a la opción seleccionada
 switch ($opcion) {
-    "1" { EjecutarScript -rutaScript "C:\Usuario\Documentos\script_con_argparse.py" -argsPython "--opcion1 valor1", "--opcion2 valor2", "--opcion3 valor3", "--opcion4 valor4", "--opcion5 valor5", "--opcion6 valor6", "--opcion7 valor7", "--opcion8 valor8" }
-    "2" { EjecutarScript -rutaScript "C:\Usuario\Documentos\Script.py" }
-    "3" { EjecutarScript -rutaScript "C:\Usuario\Documentos\Script.py" }
-    "4" { EjecutarScript -rutaScript "C:\Usuario\Documentos\Script.py" }
-    "5" { EjecutarScript -rutaScript "C:\Usuario\Documentos\Script.py" }
-    "6" { EjecutarScript -rutaScript "C:\Usuario\Documentos\Script.py" }
-    "7" { EjecutarScript -rutaScript "C:\Usuario\Documentos\Script.py" }
-    "8" { EjecutarScript -rutaScript "C:\Usuario\Documentos\Script.py" }
+    "1" {
+        $argsPython = "--opcion1","valor1","--opcion2","valor2","--opcion3","valor3","--opcion4","valor4","--opcion5","valor5","--opcion6","valor6","--opcion7","valor7","--opcion8","valor8"
+        EjecutarScriptConArgparse -rutaScript @(Join-Path -Path $PWD -ChildPath $rutaCodigos[0]) -argsPython $argsPython
+    }
+    "2" {
+        $argsPython = "--opcion1","valor1","--opcion2","valor2","--opcion3","valor3","--opcion4","valor4","--opcion5","valor5","--opcion6","valor6","--opcion7","valor7","--opcion8","valor8"
+        EjecutarScriptConArgparse -rutaScript @(Join-Path -Path $PWD -ChildPath $rutaCodigos[0]) -argsPython $argsPython
+    }
+    "3" {
+        $argsPython = "--opcion1","valor1","--opcion2","valor2","--opcion3","valor3","--opcion4","valor4","--opcion5","valor5","--opcion6","valor6","--opcion7","valor7","--opcion8","valor8"
+        EjecutarScriptConArgparse -rutaScript @(Join-Path -Path $PWD -ChildPath $rutaCodigos[0]) -argsPython $argsPython
+    }
+    "4" {
+        $argsPython = "--opcion1","valor1","--opcion2","valor2","--opcion3","valor3","--opcion4","valor4","--opcion5","valor5","--opcion6","valor6","--opcion7","valor7","--opcion8","valor8"
+        EjecutarScriptConArgparse -rutaScript @(Join-Path -Path $PWD -ChildPath $rutaCodigos[0]) -argsPython $argsPython
+    }
+    "5" {
+        $argsPython = "--opcion1","valor1","--opcion2","valor2","--opcion3","valor3","--opcion4","valor4","--opcion5","valor5","--opcion6","valor6","--opcion7","valor7","--opcion8","valor8"
+        EjecutarScriptConArgparse -rutaScript @(Join-Path -Path $PWD -ChildPath $rutaCodigos[0]) -argsPython $argsPython
+    }
+    "6" {
+        $argsPython = "--opcion1","valor1","--opcion2","valor2","--opcion3","valor3","--opcion4","valor4","--opcion5","valor5","--opcion6","valor6","--opcion7","valor7","--opcion8","valor8"
+        EjecutarScriptConArgparse -rutaScript @(Join-Path -Path $PWD -ChildPath $rutaCodigos[0]) -argsPython $argsPython
+    }
+    "7" {
+        $argsPython = "--opcion1","valor1","--opcion2","valor2","--opcion3","valor3","--opcion4","valor4","--opcion5","valor5","--opcion6","valor6","--opcion7","valor7","--opcion8","valor8"
+        EjecutarScriptConArgparse -rutaScript @(Join-Path -Path $PWD -ChildPath $rutaCodigos[0]) -argsPython $argsPython
+    }
+    "8" {
+        $argsPython = "--opcion1","valor1","--opcion2","valor2","--opcion3","valor3","--opcion4","valor4","--opcion5","valor5","--opcion6","valor6","--opcion7","valor7","--opcion8","valor8"
+        EjecutarScriptConArgparse -rutaScript @(Join-Path -Path $PWD -ChildPath $rutaCodigos[0]) -argsPython $argsPython
+    }
     "9" {exit}
-    Default { Write-Host "Opción no válida, por favor elija otra opción pinponero:D" }
+    Default { Write-Host "Opción no válida, por favor elija otra opción." }
 }
