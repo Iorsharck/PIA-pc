@@ -7,6 +7,12 @@ import requests
 import os
 import bs4
 import sys
+import argparse
+
+parser = argparse.ArgumentParser(description='Saca todas las imagenes de una pagina web')
+parser.add_argument('--web', type=str, help='Pagina web', default=
+                    "https://www.wired.com/2012/12/oops-did-vice-just-give-away-john-mcafees-location-with-this-photo/")
+args = parser.parse_args()
 
 #aqui esta donde se guardan los logging
 logging.basicConfig(filename='webscrappy_imag.log', format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO)
@@ -102,7 +108,7 @@ def metadatos(imagen_path):
 #verifica que en la carpeta tenga imagenes 
 def Meta():
     imgs = []
-    ruta = 'C:/Users/mennd/OneDrive/Escritorio/pcpcpco/imagen_segura'
+    ruta = os.getcwd()+'/imagen_segura'
     valid_images = [".jpg",".gif",".png",".tga"]
     for f in os.listdir(ruta):
          ext = os.path.splitext(f)[1]
@@ -120,8 +126,7 @@ def Meta():
          logging.info('la carpeta no contiene imagnes, se acabo la ejecucio')
 
 
-def menu():
-    url = 'https://www.wired.com/2012/12/oops-did-vice-just-give-away-john-mcafees-location-with-this-photo/'
+def menu(url):
     verifica_html(url)
     url_nueva = cheacador(url)
     conexion_request(url_nueva)
@@ -129,4 +134,4 @@ def menu():
 
 
 if __name__=='__main__':
-    menu()
+    menu(args.web)
