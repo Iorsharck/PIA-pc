@@ -1,107 +1,85 @@
-#pip install TAGS, Pillow, image, exif, ExifImage
-from PIL.ExifTags import TAGS
+from pexelsapi.pexels import Pexels
+import requests
 from PIL import Image
-from exif import Image as ExifImage
+import shutil
 import os
-import os.path
+import argparse
 import logging
-logging.basicConfig(filename='metadatos_imag.log',format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p',level=logging.INFO)
+import random
 
-#funcion que abre la imagen que utilizaremos para el codigo
+logging.basicConfig(filename = 'imagenAPIPY.log',
+            level = logging.INFO, format = '%(asctime)s %(message)s', 
+            datefmt = '%m/%d/%Y %I:%M:%S %p')
+
+#dafult no funciona si tienes required = True 
+descripcion = "Descarga imaeges de la API de Pexels" 
+epilogo = """Ejemplo de uso:
+		 + Descargar una imagen random
+          - [No se ocupan argumentos]
+		 + Descargar 2 imagenes de robots:
+			--prompt "robot" --num 2
+		 + Descargar 3 imagenes de ratones usando key propia:
+			--prompt "rat" --num 3 --key abcdefghjkl1023
+		 + Descargar 2 imagenes de randoms:
+			--prompt "random" --num 2""" 
+parser = argparse.ArgumentParser(description = descripcion, epilog = epilogo,
+        formatter_class = argparse.RawDescriptionHelpFormatter)
+parser.add_argument("-k","--key", metavar = 'API KEY', 
+                        help = "Key of the Pexels API", 
+                        default = "K8yaOzBLBeEhJ830855QhUkK5HIxR61tJt3vxHnA2xOfXDmqxsnj5BbS", 
+                        type = str)
+parser.add_argument("-p","--prompt", help = "Prompt de la imagen", 
+                        default = "random", type = str)
+parser.add_argument("-n","--num", metavar = 'NUMERO DE IMAGENES', 
+                        help = "Numero de imagenes", default = "1", type = int)
+params = parser.parse_args()
+try:
+    pexel = Pexels(params.key)
+except Exception as e:
+        logging.error("Algo salio mal con la API .",e)
 
 
-def imprimir_metadatos(imagen_imprimir):
-    imagen = Image.open(imagen_imprimir) #abre la imagen
-    #obtiene los metadatos
-    metadatos = imagen._getexif()
-    if metadatos:
-        try:
-            with open( "reporte_metadatos.txt", 'a') as f:
-                f.write("--------Metadatos de la imagen-----\n")
-                for key, valor in metadatos.items():
-                    nombre = TAGS.get(key, key)
-                    print(f"{nombre}: {valor}")
-                    f.write(f"{nombre}: {valor}\n")
-        except:
-            logging.info(f'algo salio mal con la imagen')
-            logging.warning('intenta de nuevo con otra imagen')
-    else:
-        with open( "reporte.txt", 'a') as f:
-            f.write("--------Metadatos de la imagen-----\n")
-            print("La imagen no tiene metadatos.")
-            f.write("Esta imagen no tiene metadatos EXIF\n")
-
-# imrpimimos primero los metadatos de la imagen original
+def palabrarandom(dict):
+    dictionary = []
+    with open(dict,"r") as dt:
+        for line in dt:
+            dictionary.append(str(line))
+    return dictionary[random.randrange(0,len(dictionary))]
 
 
-def metadatos_originales(imagen_path):
+def sacar_imagenes(prompt,numero):
+    download_path = str(prompt)
     try:
-        print("Metadatos originales:")
-        imprimir_metadatos(imagen_path)
+        search_photos = pexel.search_photos(query = prompt, orientation = '',
+        size = '', color = '', locale = '', page = 1, per_page = numero)
+        for i in range(len(search_photos["photos"])):
+            photo = search_photos["photos"][i]
+            URL_photo = photo["src"]["original"]
+            response = requests.get(URL_photo,stream = True)
+            try:
+                response.status_code == 200
+                with open(download_path + ".jpeg",'wb') as f:
+                    response.raw.decode_content = True
+                    shutil.copyfileobj(response.raw, f)
+                im = Image.open(download_path + ".jpeg")
+                im.save((download_path) + str(i) + ".jpg")
+                os.remove(download_path + ".jpeg")
+                logging.info(f"Se guardo con exito el archivo {str(i)}")
+            except Exception as e:
+                logging.error("Algo salio mal con la conexion. ",e)
     except Exception as e:
-        logging.error("no se encontro una imagen",e)
-        logging.info(f"ocurrio un error al meter la imagen")
+            logging.error("Algo salio mal con la API .",e)
 
-# borramos los metadatos de la imagen para despues itruducir el mensaje
+if __name__=="__main__":
+    diccionario = "dictionary.txt"
 
-
-def borrar_metadatos(imagen):
-    imagen_o = Image.open(imagen)
-    imagen_o.info.update()
-    imagen_o.save("imagen_bonita.jpg")
-
-
-# introducimos el mensaje en los metadatos exif de la imagen
-
-
-def meter_metadatos(msg1, msg2):
-    image_modi = "imagen_bonita.jpg"
-    try:
-        with open(image_modi, "rb") as input_file:
-            exif_img = ExifImage(input_file)
-            exif_img.artist = msg1
-            exif_img.copyright = msg2
-    except Exception as e:
-        logging.error(f"fallo algo al modifcar la imagen {e}")
-        print("fallo algo al modifcar la imagen")
-
-    try:
-        with open(image_modi, "wb") as ofile:
-            ofile.write(exif_img.get_file())
-    except Exception as e:
-        logging.info("no encontro la imagen modificada")
-        print("no encontro la imagen modificada")
-
-#imprimimos los metadatos modificados
-
-
-def imprimir_metasmodi(image_modi):
-    print("\nMetadatos modificados:")
-    imprimir_metadatos(image_modi)
-
-#ruta de la imagen
-
-
-def meta():
-    imgs = []
-    ruta = 'C:/Users/mennd/OneDrive/Escritorio/PIA_PCPC/NUEVOS'
-    valid_images = ".jpg"
-    for f in os.listdir(ruta):
-        ext = os.path.splitext(f)[1]
-        if ext.lower() not in valid_images:
-            continue
-        imgs.append(os.path.join(ruta,f))
-    if len(imgs) != 0:
-        for name in imgs:
-            metadatos_originales(name)
-            borrar_metadatos(name)
-            print("se borraror correctamente los metadatos")
-    else:
-        print("no se encontraron imagenes")
-        logging.info('la carpeta no tiene imagenes, poner imagenes')
-    
-
-
-if __name__=='__main__':
-    meta()
-    print("se ejecuto correctamente")
+    if params.prompt == "random":#Si quiere random
+        if os.path.exists("dictionary.txt"):#Checar si esta el diccionario
+            logging.info(f"Diccionnario confirmado")
+            palabrita = palabrarandom(diccionario)
+            palabrita = palabrita.strip().lower() #Quita los enters y lo pone en minuscula
+            sacar_imagenes(palabrita,params.num)
+        else:#Marcar error por falta de diccioario
+            logging.error("No se tiene el diccionario para generar palabras random, favor de descargar en esta carpeta ",diccionario)
+    else:#Sacar imagen no random
+        sacar_imagenes(params.prompt,params.num)
