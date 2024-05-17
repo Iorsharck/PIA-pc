@@ -7,6 +7,7 @@ import argparse
 import logging
 import random
 
+
 logging.basicConfig(filename = 'imagenAPIPY.log',
             level = logging.INFO, format = '%(asctime)s %(message)s', 
             datefmt = '%m/%d/%Y %I:%M:%S %p')
@@ -64,7 +65,7 @@ def sacar_imagenes(prompt,numero):
                 im = Image.open(download_path + ".jpeg")
                 im.save((download_path) + str(i) + ".jpg")
                 os.remove(download_path + ".jpeg")
-                logging.info(f"Se guardo con exito el archivo {str(i)}")
+                logging.info(f"Se guardo con exito el archivo {prompt}{str(i)}.jpg")
             except Exception as e:
                 logging.error("Algo salio mal con la conexion. ",e)
     except Exception as e:
@@ -82,4 +83,7 @@ if __name__=="__main__":
         else:#Marcar error por falta de diccioario
             logging.error("No se tiene el diccionario para generar palabras random, favor de descargar en esta carpeta ",diccionario)
     else:#Sacar imagen no random
-        sacar_imagenes(params.prompt,params.num)
+        palabrita=params.prompt
+        sacar_imagenes(palabrita,params.num)
+    
+    #Aqui limpia los metadatos de la imagen que se llama palabrita+".jpg"
