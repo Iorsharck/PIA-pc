@@ -2,6 +2,7 @@ import requests
 import logging
 import argparse
 import re
+import os
 
 apikey = '4f6de85926d0c96320098fdb0b5fbe86d1f2558ced0eb962df8a527ea76bc210'
 logging.basicConfig(filename='Consulta_Ips.log', level=logging.INFO, format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
@@ -36,7 +37,7 @@ def guardarip(ip, resultado, blacklist):
 
     propietario = resultado['data']['attributes']['as_owner']
     categoria = resultado['data']['attributes']['last_analysis_stats']
-    reporteips = 'C:/PC pero en C/PC-PIA/Reporte_Ips.txt'
+    reporteips = os.getcwd()+'Reporte_Ips.txt'
     try:
         with open(reporteips, 'a') as file:
             file.write(f'IP: {ip}\n')
@@ -52,7 +53,7 @@ def guardarip(ip, resultado, blacklist):
 def main():
 
     parser = argparse.ArgumentParser(description = 'Consulta de Ips en VirusTotal')
-    parser.add_argument('ip', type = str, help = 'IP a consultar')
+    parser.add_argument('--ip', type = str, help = 'IP a consultar')
     args = parser.parse_args()
     ip = args.ip
     try:
