@@ -5,6 +5,7 @@ import logging
 from cryptography.fernet import Fernet
 from PIL import Image
 import metadatos_imag
+import os
 
 logging.basicConfig(filename='imagenFernet.log', level=logging.INFO, format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 
@@ -12,10 +13,11 @@ descripcion = "Retorna un mensaje des/encriptado de key de Fernet con base en un
 epilogo = """Advertencia: Este programa usa como formato de imagen valido JPG
         + Retornar mensaje encriptado con imagen
             --mensaje "Hola mundo" --modo "encriptar"
-        + Retornar mensaje desencriptado con imagen
-            --path "C:/Users/Admin/Pictures/x.png" --mensaje "xQlhn=" --modo "desencriptar" """
+        + Retornar mensaje desencriptado con imagen.jpg (en el mismo directorio donde ejecutas esto)
+            --path "imagen.jpg" --mensaje "xQlhn=" --modo "desencriptar" """
 parser = argparse.ArgumentParser(description=descripcion, epilog=epilogo,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
+parser.add_argument("-p","--path",metavar= "JPG", help="Imagen clave", required=True, type=str)
 parser.add_argument("-me", "--mensaje", help="Mensaje para des/encriptar", required=True, type=str)
 parser.add_argument("-m", "--modo", help="Modo de ejecucion: encriptar, desencriptar",
                     required=True, type=str, choices=['encriptar', 'desencriptar'])
@@ -56,17 +58,15 @@ def decrypt_message(encrypted_message, key):
         logging.error("Algo salio mal con la desencriptacion. ", e)
 
 
-path_image = 'C:/Users/mennd/OneDrive/Escritorio/PIA_PCPC/NUEVOS/imagen_bonita.jpg'
-
+path_image = os.getcwd()+"\\"+params.path
+print (f" --- {path_image}")
 if params.modo == "encriptar":
     print(encrypt_message(params.mensaje, generate_key(path_image)))
     msg1 = "este es el mensaje cifrado"
     msg2 = encrypt_message(params.mensaje, generate_key(path_image))
-    metadatos_imag.meter_metadatos(msg1, msg2)
+    metadatos_imag.meter_metadatos(msg1, msg2) #Arreglar errores
     image_modi = "imagen_bonita.jpg"
     metadatos_imag.imprimir_metasmodi(image_modi)
 
 if params.modo == "desencriptar":
     print('\n', decrypt_message(params.mensaje, generate_key(path_image)).decode())
-
-
