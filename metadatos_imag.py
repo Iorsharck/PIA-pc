@@ -84,7 +84,7 @@ def imprimir_metasmodi(image_modi):
 
 def meta():
     imgs = []
-    ruta = 'C:/Users/mennd/OneDrive/Escritorio/PIA_PCPC/NUEVOS'
+    ruta = os.getcwd()
     valid_images = ".jpg"
     for f in os.listdir(ruta):
         ext = os.path.splitext(f)[1]
