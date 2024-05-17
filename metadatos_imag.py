@@ -16,7 +16,7 @@ def imprimir_metadatos(imagen_imprimir):
     metadatos = imagen._getexif()
     if metadatos:
         try:
-            with open( "reporte.txt", 'a') as f:
+            with open( "reporte_metadatos.txt", 'a') as f:
                 f.write("--------Metadatos de la imagen-----\n")
                 for key, valor in metadatos.items():
                     nombre = TAGS.get(key, key)
@@ -30,6 +30,17 @@ def imprimir_metadatos(imagen_imprimir):
             f.write("--------Metadatos de la imagen-----\n")
             print("La imagen no tiene metadatos.")
             f.write("Esta imagen no tiene metadatos EXIF\n")
+
+# imrpimimos primero los metadatos de la imagen original
+
+
+def metadatos_originales(imagen_path):
+    try:
+        print("Metadatos originales:")
+        imprimir_metadatos(imagen_path)
+    except Exception as e:
+        logging.error("no se encontro una imagen",e)
+        logging.info(f"ocurrio un error al meter la imagen")
 
 # borramos los metadatos de la imagen para despues itruducir el mensaje
 
@@ -87,7 +98,7 @@ def meta():
             print("se borraror correctamente los metadatos")
     else:
         print("no se encontraron imagenes")
-        logging.info('poner papus imagnes, se acabo la ejecucion')
+        logging.info('la carpeta no tiene imagenes, poner imagenes')
     
 
 
