@@ -1,17 +1,24 @@
+import os 
 from PIL.ExifTags import TAGS
 from PIL import Image
-from exif import Image as ExifImage
-import os , os.path
+import os.path
 import logging
-import requests, os, bs4, sys
-logging.basicConfig(filename='webscrappy_imag.log',format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p',level=logging.INFO)
+import requests
+import os
+import bs4
+import sys
 
+#aqui esta donde se guardan los logging
+logging.basicConfig(filename='webscrappy_imag.log', format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO)
+
+#aqui se comprueba que este bien escrito la url con http://
 def cheacador(url):
     if url.startswith("http://") or url.startswith("https://"):
         return url
     else:
         return "http://" + url
 
+#aqui se verifica que tenga html la pagina web
 def verifica_html(url):
     try:
         response = requests.get(url)
@@ -26,18 +33,20 @@ def verifica_html(url):
             print("No se pudo acceder a la página:", response.status_code)
             sys.exit()
     except Exception as e:
+        print("intente de nuevo, ocurrio un error con url")
         logging.info(f"Ocurrió un error:", e)
         sys.exit()
-    
+ 
+#aqui se hace un llamado a la pagian y se saca los datos html
 def conexion_request(url_nueva):
     os.makedirs('imagen_segura', exist_ok=True)
     print('esperando la pagina %s...' % url_nueva)
     res = requests.get(url_nueva)
-    soup = bs4.BeautifulSoup(res.text, "html.parser")
+    soup = bs4.BeautifulSoup(res.text, "html.parser")  #aqui se lee el html y se parsea
     
-    imagenes = soup.find_all('img')
+    imagenes = soup.find_all('img') #buscan en todo html las imgenes
     if imagenes == []:
-        print('No se encontró.')
+        print('No se encontró imagenes en html.')
     else:
         for img in imagenes:
             imgUrl = img.get('src')
@@ -45,7 +54,7 @@ def conexion_request(url_nueva):
                 if imgUrl.startswith("http"):
                     print('Descargando %s...' % (imgUrl))
                     response = requests.get(imgUrl)
-                    if response.status_code == 200:
+                    if response.status_code == 200:      #aqui se descargan las imagenes y se meten a la carpeta
                         imageFile = open(os.path.join('imagen_segura', os.path.basename(imgUrl)),'wb')
                         for chunk in response.iter_content(100000):
                             imageFile.write(chunk)
@@ -60,15 +69,15 @@ def conexion_request(url_nueva):
                             imageFile.write(chunk)
                             imageFile.close()
             except:
-                logging.info(f"la imagen {imgUrl} ,no es compatible con http")
+                logging.info(f"la imagen {imgUrl} ,no es compatible")
 
-
+#se hace el proceso de impresion de los metadatos
 def imprimir_metadatos(imagen_imprimir):
     imagen = Image.open(imagen_imprimir)
     metadatos = imagen._getexif()
     if metadatos:
          try:
-              with open( "reporte_webscrapping.txt", 'a') as f:
+              with open( "reporte_webscrapping.html", 'a') as f:
                    f.write("--------Metadatos de las imagenenes-----\n")
                    for key, valor in metadatos.items():
                         nombre = TAGS.get(key, key)
@@ -77,20 +86,23 @@ def imprimir_metadatos(imagen_imprimir):
          except Exception as e:
               logging.info(f'algo salio mal con los reportes',e)
     else:
-        with open( "reporte_webscrapping.txt", 'a') as f:
+        with open( "reporte_webscrapping.html", 'a') as f:
             f.write("--------Metadatos de las imagenenes-----\n")
             print("La imagen no tiene metadatos.")
             f.write("La imagen no tiene metadatos.\n")
 
+#se imprime los metadatos 
 def metadatos(imagen_path):
     try:
          imprimir_metadatos(imagen_path)
     except Exception as e:
         logging.info("ocurrio una error al meter la imagen")
+        print("hubo un error al introducir la imagen")
 
+#verifica que en la carpeta tenga imagenes 
 def Meta():
     imgs = []
-    ruta = 'C:/Users/mennd/OneDrive/Escritorio/PIA_PCPC/NUEVOS/imagen_segura'
+    ruta = 'C:/Users/mennd/OneDrive/Escritorio/pcpcpco/imagen_segura'
     valid_images = [".jpg",".gif",".png",".tga"]
     for f in os.listdir(ruta):
          ext = os.path.splitext(f)[1]
@@ -105,7 +117,8 @@ def Meta():
             i=i+1
     else:
          print("no se encontraron imagenes")
-         logging.info('poner papus imagnes, se acabo la ejecucio')
+         logging.info('la carpeta no contiene imagnes, se acabo la ejecucio')
+
 
 def menu():
     url = 'https://www.wired.com/2012/12/oops-did-vice-just-give-away-john-mcafees-location-with-this-photo/'
@@ -117,9 +130,3 @@ def menu():
 
 if __name__=='__main__':
     menu()
-
-
-
-
-
-
