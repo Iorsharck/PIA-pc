@@ -4,6 +4,11 @@ import argparse
 
 logging.basicConfig(filename='port_scanner.log', level=logging.INFO, format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 
+parser = argparse.ArgumentParser(description = "Escaneo de puertos", 
+formatter_class = argparse.ArgumentDefaultsHelpFormatter)
+parser.add_argument("--host", help = "Dirección IP para escanear", default="127.0.0.1")
+args = parser.parse_args()
+
 p_abiertos = 0
 # Diccionario de Puertos
 puertos = dict()
@@ -30,11 +35,6 @@ def scan_ports(host):
     return puertos_abiertos
 
 if __name__ == "__main__":
-
-    parser = argparse.ArgumentParser(description = "Escaneo de puertos", 
-    formatter_class = argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument("host", help = "Dirección IP para escanear")
-    args = parser.parse_args()
     
     try:
         puertos_abiertos = scan_ports(args.host)
