@@ -52,7 +52,7 @@ def guardarip(ip, resultado, blacklist):
 
 def main():
 
-    parser = argparse.ArgumentParser(description = 'Consulta de Ips en VirusTotal')
+    parser = argparse.ArgumentParser(description = 'Consul{ta de Ips en VirusTotal')
     parser.add_argument('--ip', type = str, help = 'IP a consultar')
     args = parser.parse_args()
     ip = args.ip
