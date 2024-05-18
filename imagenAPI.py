@@ -86,4 +86,4 @@ if __name__=="__main__":
         palabrita=params.prompt
         sacar_imagenes(palabrita,params.num)
     
-    #Aqui limpia los metadatos de la imagen que se llama palabrita+".jpg"
+    print(palabrita+"0.jpg")
