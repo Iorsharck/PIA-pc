@@ -15,12 +15,12 @@ epilogo = """Advertencia: Este programa usa como formato de imagen valido JPG
             --mensaje "Hola mundo" --modo "encriptar"
         + Retornar mensaje desencriptado con imagen.jpg (en el mismo directorio donde ejecutas esto)
             --path "imagen.jpg" --mensaje "xQlhn=" --modo "desencriptar" """
-parser = argparse.ArgumentParser(description = descripcion, epilog = epilogo,
-                                 formatter_class = argparse.RawDescriptionHelpFormatter)
-parser.add_argument("-p","--path",metavar = "JPG", help = "Imagen clave", required = True, type = str)
-parser.add_argument("-me", "--mensaje", help = "Mensaje para des/encriptar", required = True, type = str)
-parser.add_argument("-m", "--modo", help = "Modo de ejecucion: encriptar, desencriptar",
-                    required = True, type = str, choices = ['encriptar', 'desencriptar'])
+parser = argparse.ArgumentParser(description=descripcion, epilog=epilogo,
+                                 formatter_class=argparse.RawDescriptionHelpFormatter)
+parser.add_argument("-p","--path",metavar= "JPG", help="Imagen clave", required=True, type=str)
+parser.add_argument("-me", "--mensaje", help="Mensaje para des/encriptar", required=True, type=str)
+parser.add_argument("-m", "--modo", help="Modo de ejecucion: encriptar, desencriptar",
+                    required=True, type=str, choices=['encriptar', 'desencriptar'])
 params = parser.parse_args()
 
 
@@ -58,9 +58,7 @@ def decrypt_message(encrypted_message, key):
         logging.error("Algo salio mal con la desencriptacion. ", e)
 
 
-path_image = os.getcwd() + "\\" + params.path
-print(path_image)
-print (f" --- {path_image}")
+path_image = os.getcwd()+"\\"+params.path
 if params.modo == "encriptar":
     print(encrypt_message(params.mensaje, generate_key(path_image)))
     msg1 = "este es el mensaje cifrado"
@@ -71,5 +69,4 @@ if params.modo == "encriptar":
     metadatos_imag.imprimir_metasmodi(image_modi)
 
 if params.modo == "desencriptar":
-    print('\n', decrypt_message(params.mensaje,
-    generate_key(path_image)).decode())
+    print(decrypt_message(params.mensaje, generate_key(path_image)).decode())
