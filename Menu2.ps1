@@ -1,10 +1,12 @@
-# Personalizo el saludo segÃºn el horario
+# Personalizo el saludo según el horario
+
+Set-ExecutionPolicy -ExecutionPolicy Bypass
 function ObtenerSaludo {
     $horaActual = Get-Date
     $hora = $horaActual.Hour
 
     if ($hora -ge 5 -and $hora -lt 12) {
-        return "Buenos dÃ­as"
+        return "Buenos dÃƒÂ­as"
     } elseif ($hora -ge 12 -and $hora -lt 18) {
         return "Buenas tardes"
     } else {
@@ -29,7 +31,7 @@ function MainMenu {
 }
 
 
-# FunciÃ³n para ejecutar el script de Python con argparse
+# Función para ejecutar el script de Python con argparse
 function EjecutarScriptConArgparse {
     param (
         [string]$rutaScript,
@@ -44,7 +46,7 @@ function EsperarDosSegundos {
     Start-Sleep -Seconds 2
 }
 
-# Muestra el mensaje segÃºn el horario
+# Muestra el mensaje según el horario
 function MostrarMensajeDeHorario {
     $saludo = ObtenerSaludo
     Write-Host $saludo ", Que deseas hacer hoy pinponero?"
@@ -56,33 +58,40 @@ MostrarMensajeDeHorario
 # Esperar 2 segundos
 EsperarDosSegundos
 
-# Mostrar el menÃº
+# Mostrar el menú
 MainMenu
 
 # Preguntar al pinponero que va a hacer
 
-
 # Arrays/Lista con los nombres de los programas
 $rutaCodigos = @("imagenAPI.py","imagenFernet.py","transmision.py","escaneopuertos.py","webscrappy.py","ConsultaDeApis.py")
 
-# Ejecutar el script correspondiente a la opciÃ³n seleccionada
+# Ejecutar el script correspondiente a la opción seleccionada
 while ($true)
 {
     $argsPython = @()
-    $opcion = Read-Host "Seleccione una opcion del menu (1-6)"
+    $opcion = Read-Host "Seleccione una opción del menú (1-6)"
     switch ($opcion) {
         "1" {
-            $imagen = EjecutarScriptConArgparse -rutaScript @(Join-Path -Path $PWD -ChildPath $rutaCodigos[0])
-            $mg = Read-Host "Escriba el mensaje que se encriptara"
-            $argsPython = "-m","encriptar","-p",$imagen,"-me", $mg
-            $e = EjecutarScriptConArgparse -rutaScript @(Join-Path -Path $PWD -ChildPath $rutaCodigos[1]) -argsPython $argsPython
+            try {
+                $imagen = EjecutarScriptConArgparse -rutaScript @(Join-Path -Path $PWD -ChildPath $rutaCodigos[0])
+                $mg = Read-Host "Escriba el mensaje que se encriptará"
+                $argsPython = "-m","encriptar","-p",$imagen,"-me", $mg
+                $e = EjecutarScriptConArgparse -rutaScript @(Join-Path -Path $PWD -ChildPath $rutaCodigos[1]) -argsPython $argsPython
+            } catch {
+                Write-Host "Error: No se pudo obtener la imagen de la API."
+            }
         }
         "2" {
+            if (-not $imagen) {
+                Write-Host "Error: No se ha descargado ninguna imagen. Por favor, seleccione la opción 1 primero."
+                break
+            }
             $argsPython = "-m","desencriptar","-p",$imagen, "-me", $e
-            echo "Este es el codigo decifrado:" @(EjecutarScriptConArgparse -rutaScript @(Join-Path -Path $PWD -ChildPath $rutaCodigos[1]) -argsPython $argsPython)
+            echo "Este es el código decifrado:" @(EjecutarScriptConArgparse -rutaScript @(Join-Path -Path $PWD -ChildPath $rutaCodigos[1]) -argsPython $argsPython)
         }
         "3" {#
-            $ip = Read-Host "Escriba una ip para scannear puertos populares"
+            $ip = Read-Host "Escriba una IP para escanear puertos populares"
             if ($web -eq ""){
             $argsPython = "--host","2.2.2.2"
             EjecutarScriptConArgparse -rutaScript @(Join-Path -Path $PWD -ChildPath $rutaCodigos[3])
@@ -92,7 +101,7 @@ while ($true)
         }
         }
         "4" {
-            $web = Read-Host "Escriba una pagina para verificar si es segura, dejalo en blanco para poner web por default"
+            $web = Read-Host "Escriba una página para verificar si es segura, déjela en blanco para usar la página por defecto"
             if ($web -eq ""){
             EjecutarScriptConArgparse -rutaScript @(Join-Path -Path $PWD -ChildPath $rutaCodigos[4])
             }else{
@@ -102,7 +111,7 @@ while ($true)
         }
         
         "5" {
-            $ip = Read-Host "Escriba una ip para saber si es segura"
+            $ip = Read-Host "Escriba una IP para saber si es segura"
             $argsPython = "--ip",$ip
             if ($ip -eq ""){
             $argsPython = "--ip","1.1.1.1"
@@ -113,6 +122,6 @@ while ($true)
             }
         }
         "6" {exit}
-        Default { Write-Host "Opción no válida, por favor elija otra opcion." }
+        Default { Write-Host "Opción no válida, por favor elija otra opción." }
     }
-    }
+}
