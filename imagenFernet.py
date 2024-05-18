@@ -29,7 +29,7 @@ def generate_key(path_image):
         img = Image.open(path_image)
         # Convertimos la imagen a escala de grises para simplificar
         img_gray = img.convert('L')
-        # Obtenemos los datos de los píxeles de la imagen en forma de bytes
+        # Obtenemos los datos de los pÃ­xeles de la imagen en forma de bytes
         pixels = img_gray.tobytes()
         # Generamos un hash SHA-256
         hash_bytes = hashlib.sha256(pixels).digest()
@@ -59,6 +59,7 @@ def decrypt_message(encrypted_message, key):
 
 
 path_image = os.getcwd()+"\\"+params.path
+print(path_image)
 print (f" --- {path_image}")
 if params.modo == "encriptar":
     print(encrypt_message(params.mensaje, generate_key(path_image)))
@@ -66,6 +67,7 @@ if params.modo == "encriptar":
     msg2 = encrypt_message(params.mensaje, generate_key(path_image))
     metadatos_imag.meter_metadatos(msg1, msg2, path_image) #Arreglar errores
     image_modi = path_image
+    
     metadatos_imag.imprimir_metasmodi(image_modi)
 
 if params.modo == "desencriptar":
