@@ -13,8 +13,10 @@ p_abiertos = 0
 # Diccionario de Puertos
 puertos = dict()
 puertos = {
-    20: "FTP Data", 21: "FTP", 22: "SSH", 23: "Telnet", 25: "SMTP", 53: "DNS", 59: "DCC", 79: "Finger", 80: "HTTP", 110: "POP3", 113: "IDENT", 119: "NNTP", 135: "NetBIOS", 139: "NetBIOS", 143: "IMAP", 389: "LDAP", 443: "HTTPS", 445: "MSFT DS", 563: "POP3 SSL",
-    993: "IMAP4 SSL", 995: "POP3 SSL", 1080: "Proxy", 1723: "PPTP", 3306: "MySQL", 5000: "UPnP", 445: "prueba", 8080: "Proxy Web"}
+    20: "FTP Data", 21: "FTP", 22: "SSH", 23: "Telnet", 25: "SMTP", 53: "DNS", 59: "DCC", 79: "Finger", 
+    80: "HTTP", 110: "POP3", 113: "IDENT", 119: "NNTP", 135: "NetBIOS", 139: "NetBIOS", 143: "IMAP", 389: "LDAP",
+    443: "HTTPS", 445: "MSFT DS", 563: "POP3 SSL", 993: "IMAP4 SSL", 995: "POP3 SSL", 1080: "Proxy", 1723: "PPTP",
+    3306: "MySQL", 5000: "UPnP", 445: "prueba", 8080: "Proxy Web"}
 
 print("#" + (" " * 9) + "Escaner de Puertos con Python" + (" " * 9) + "#")
 
