@@ -38,8 +38,8 @@ def metadatos_originales(imagen_path):
     try:
         print("Metadatos originales:")
         imprimir_metadatos(imagen_path)
-    except Exception as e:
-        logging.error("no se encontro una imagen",e)
+    except:
+        logging.error("no se encontro una imagen")
         logging.info(f"ocurrio un error al meter la imagen")
 
 # borramos los metadatos de la imagen para despues itruducir el mensaje
@@ -48,14 +48,13 @@ def metadatos_originales(imagen_path):
 def borrar_metadatos(imagen):
     imagen_o = Image.open(imagen)
     imagen_o.info.update()
-    imagen_o.save("imagen_bonita.jpg")
+    imagen_o.save(imagen)
 
 
 # introducimos el mensaje en los metadatos exif de la imagen
 
 
-def meter_metadatos(msg1, msg2):
-    image_modi = "imagen_bonita.jpg"
+def meter_metadatos(msg1, msg2 ,image_modi):
     try:
         with open(image_modi, "rb") as input_file:
             exif_img = ExifImage(input_file)
@@ -87,10 +86,15 @@ def meta():
     ruta = os.getcwd()
     valid_images = ".jpg"
     for f in os.listdir(ruta):
-        ext = os.path.splitext(f)[1]
-        if ext.lower() not in valid_images:
+        if os.path.isdir(f):
             continue
-        imgs.append(os.path.join(ruta,f))
+        ext = os.path.splitext(f)[1]
+        try:
+            if ext.lower() not in valid_images:
+                continue
+            imgs.append(os.path.join(ruta,f))
+        except:
+            logging.error(f"hubo un error al escanear la carpeta")
     if len(imgs) != 0:
         for name in imgs:
             metadatos_originales(name)
