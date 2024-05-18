@@ -64,7 +64,7 @@ MainMenu
 # Preguntar al pinponero que va a hacer
 
 # Arrays/Lista con los nombres de los programas
-$rutaCodigos = @("imagenAPI.py","imagenFernet.py","transmision.py","escaneopuertos.py","webscrappy.py","ConsultaDeApis.py")
+$rutaCodigos = @("imagenAPI.py","imagenFernet.py","transmision.py","escaneopuertos.py","webscraping.py","ConsultaDeApis.py")
 
 # Ejecutar el script correspondiente a la opción seleccionada
 while ($true)
